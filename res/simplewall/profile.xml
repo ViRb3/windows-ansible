@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<root timestamp="1600649739" type="3" version="3">
+    <rules_custom>
+        <item name="HTTPS WinRM" rule_local="5986" dir="1" protocol="6" is_enabled="1" />
+    </rules_custom>
+</root>

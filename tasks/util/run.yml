@@ -1,0 +1,20 @@
+---
+- name: Run task
+  vars:
+    # script: ScriptFileToRun.ps1
+    # args: Script args
+    _dest_path: "{{ ansible_env.USERPROFILE }}\\TempScript.ps1"
+  block:
+    - name: Copy script
+      win_copy:
+        src: "../{{ script }}"
+        dest: "{{ _dest_path }}"
+
+    - name: Run script
+      win_shell: |
+        powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "{{ _dest_path }}" "{{ args | default('') }}"
+
+    - name: Clean up script
+      win_file:
+        path: "{{ _dest_path }}"
+        state: absent

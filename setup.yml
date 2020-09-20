@@ -1,0 +1,13 @@
+---
+- hosts: windows_client
+
+  vars:
+    # workaround backslash+quote parsing bug
+    backslash: \
+
+  tasks:
+    - include_tasks: tasks/prepare.yml
+    - include_tasks: tasks/disable-defender.yml
+    - include_tasks: tasks/software.yml
+    - include_tasks: tasks/cleanup.yml
+      when: not debug

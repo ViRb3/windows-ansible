@@ -1,0 +1,8 @@
+---
+- name: Disable Windows Defender by adding exclusion for each possible drive
+  win_shell: |
+    (65..(65+25)).ForEach({ Add-MpPreference -ExclusionPath  "$([char]$_):{{ backslash }}" })
+
+- name: Disable Windows Defender automatic sample submission
+  win_shell: |
+    Set-MpPreference -SubmitSamplesConsent NeverSend

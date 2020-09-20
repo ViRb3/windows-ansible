@@ -1,0 +1,28 @@
+---
+- name: SimpleWall
+  vars:
+    src_path: ./res/simplewall
+    dest_path: "{{ ansible_env.ProgramW6432 }}"
+    dest_exe: "{{ dest_path }}\\simplewall\\simplewall.exe"
+  block:
+    - name: Copy SimpleWall
+      win_copy:
+        src: "{{ src_path }}"
+        dest: "{{ dest_path }}"
+        force: no
+
+    - name: Install SimpleWall
+      vars:
+        exec_args: |
+          Start-Process -FilePath '{{ dest_exe }}' -ArgumentList '/install /silent' -Wait
+          Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+          Start-Process -FilePath '{{ dest_exe }}'
+          $true
+      include_tasks: util/exec-interactive.yml
+
+    - name: Enable autostart
+      win_regedit:
+        path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+        name: simplewall
+        data: "{{ dest_exe }}"
+        type: string

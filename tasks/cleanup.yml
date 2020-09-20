@@ -1,0 +1,16 @@
+---
+- name: Remove all Event Viewer entries
+  win_shell: |
+    Get-EventLog -List | ForEach-Object {$_.Log} | ForEach-Object {Clear-EventLog -LogName $_ }
+
+- name: Remove all temporary files
+  win_shell: |
+    Remove-Item "{{ ansible_env.TEMP }}\*" -Recurse -Force
+    Remove-Item "{{ ansible_env.SystemRoot }}\Temp\*" -Recurse -Force
+    $true
+
+- name: Clean Powershell history
+  win_shell: |
+    Clear-History
+    Remove-Item (Get-PSReadlineOption).HistorySavePath -ErrorAction SilentlyContinue
+    $true

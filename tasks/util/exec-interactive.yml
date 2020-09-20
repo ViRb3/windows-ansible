@@ -1,0 +1,31 @@
+---
+# WinRM runs in non-interactive session which prevents certain functionality
+# To work around this, use the task scheduler which will run in the current user's interactive session
+- name: Execute interactive task
+  vars:
+    # exec_args: Powershell args
+    name: interactive-task
+  block:
+    - name: Schedule interactive task
+      win_scheduled_task:
+        name: "{{ name }}"
+        username: "{{ ansible_env.USERNAME }}"
+        run_level: highest
+        actions:
+          - path: powershell.exe
+            arguments: "{{ exec_args }}"
+        triggers:
+          - type: registration
+
+    - name: Wait for interactive task to finish
+      win_scheduled_task_stat:
+        name: "{{ name }}"
+      register: task_stat
+      until: (task_stat.state is defined and task_stat.state.status != "TASK_STATE_RUNNING") or (task_stat.task_exists == False)
+      retries: 12
+      delay: 10
+
+    - name: Remove interactive task
+      win_scheduled_task:
+        name: "{{ name }}"
+        state: absent
