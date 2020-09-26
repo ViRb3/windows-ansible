@@ -66,6 +66,23 @@
     }
     $true
 
+- name: Uninstall built-in apps
+  win_shell: |
+    Get-AppxPackage *3dviewer* | Remove-AppxPackage
+    Get-AppxPackage *feedback* | Remove-AppxPackage
+    Get-AppxPackage *windowsmaps* | Remove-AppxPackage
+    Get-AppxPackage *solitairecollection* | Remove-AppxPackage
+    Get-AppxPackage *mixedreality* | Remove-AppxPackage
+    Get-AppxPackage *officehub* | Remove-AppxPackage
+    Get-AppxPackage *onenote* | Remove-AppxPackage
+    Get-AppxPackage *mspaint* | Remove-AppxPackage # Paint 3D
+    Get-AppxPackage *skypeapp* | Remove-AppxPackage
+    Get-AppxPackage *screensketch* | Remove-AppxPackage
+    Get-AppxPackage *getstarted* | Remove-AppxPackage # tips
+    Get-AppxPackage *bingweather* | Remove-AppxPackage
+    Get-AppxPackage *xbox* | Remove-AppxPackage
+    $true
+
 - name: Disable Sticky Keys
   win_regedit:
     path: HKCU:\Control Panel\Accessibility\{{ item.path }}
