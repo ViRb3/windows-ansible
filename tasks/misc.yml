@@ -1,0 +1,87 @@
+---
+# https://winaero.com/blog/disable-smartscreen-windows-10-creators-update/
+- name: Disable SmartScreen
+  win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+  loop:
+    - { name: "SmartScreenEnabled", data: "Off", type: "string" }
+
+- name: Disable animations
+  vars:
+    script: ../res/DisableAnimations.ps1
+  include_tasks: util/run-interactive.yml
+
+- name: Set power plan to High Performance
+  win_power_plan:
+    name: high performance
+
+- name: Disable screen timeout
+  win_shell: powercfg -change -monitor-timeout-ac 0
+
+- name: Disable telemetry
+  win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\{{ item }}
+    name: Debugger
+    data: systray.exe
+    type: string
+  loop:
+    - compattelrunner.exe
+    - wsqmcons.exe
+
+- name: Uninstall OneDrive
+  win_shell: |
+    $process = Get-Process onedrive -ErrorAction SilentlyContinue
+    if ($null -ne $process) {
+      $process | Stop-Process -Force
+      Start-Process "$env:SystemRoot\SysWOW64\OneDriveSetup.exe" "/uninstall" -Wait
+    }
+    $true
+
+- name: Uninstall built-in apps
+  win_shell: |
+    Get-AppxPackage *3dviewer* | Remove-AppxPackage
+    Get-AppxPackage *feedback* | Remove-AppxPackage
+    Get-AppxPackage *windowsmaps* | Remove-AppxPackage
+    Get-AppxPackage *solitairecollection* | Remove-AppxPackage
+    Get-AppxPackage *mixedreality* | Remove-AppxPackage
+    Get-AppxPackage *officehub* | Remove-AppxPackage
+    Get-AppxPackage *onenote* | Remove-AppxPackage
+    Get-AppxPackage *mspaint* | Remove-AppxPackage # Paint 3D
+    Get-AppxPackage *skypeapp* | Remove-AppxPackage
+    Get-AppxPackage *screensketch* | Remove-AppxPackage
+    Get-AppxPackage *getstarted* | Remove-AppxPackage # tips
+    Get-AppxPackage *bingweather* | Remove-AppxPackage
+    Get-AppxPackage *xbox* | Remove-AppxPackage
+    $true
+
+- name: Disable Sticky Keys
+  win_regedit:
+    path: HKCU:\Control Panel\Accessibility\{{ item.path }}
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: string
+  loop:
+    - { path: StickyKeys, name: Flags, data: 506 }
+    - { path: Keyboard Response, name: Flags, data: 122 }
+    - { path: ToggleKeys, name: Flags, data: 58 }
+
+- name: Configure Windows Explorer
+  win_regedit:
+    path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: dword
+  loop:
+    - { name: Hidden, data: 1 }
+    - { name: HideFileExt, data: 0 }
+    - { name: HideDrivesWithNoMedia, data: 0 }
+    - { name: DisallowShaking, data: 1 }
+    - { name: LaunchTo, data: 1 }
+
+- name: Delete live tiles
+  vars:
+    script: ../res/DeleteLiveTiles.ps1
+  include_tasks: util/run-interactive.yml
