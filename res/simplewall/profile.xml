@@ -9,5 +9,14 @@
         <item path="C:\windows\system32\wermgr.exe" timestamp="1600550696" is_silent="1" />
         <item path="C:\windows\system32\werfault.exe" timestamp="1600631803" is_silent="1" />
         <item path="System" timestamp="1599756594" is_enabled="1" />
+		<item path="C:\windows\system32\taskhostw.exe" timestamp="1601111444" is_enabled="1" />
+        <item path="C:\windows\system32\smartscreen.exe" timestamp="1601112024" />
+		<item path="C:\program files\windows defender\mpcmdrun.exe" timestamp="1601111898" is_enabled="1" />
+		<item path="C:\Program Files\simplewall\simplewall.exe" timestamp="1601107421" is_enabled="1" />
+		<item path="C:\windows\system32\mousocoreworker.exe" timestamp="1601111428" is_enabled="1" />
+		<item path="C:\windows\immersivecontrolpanel\systemsettings.exe" timestamp="1601111446" is_enabled="1" />
+		<item path="C:\windows\system32\mrt.exe" timestamp="1601111987" is_enabled="1" />
+		<item path="C:\windows\system32\wuauclt.exe" timestamp="1601112142" is_enabled="1" />
+		<item path="C:\windows\system32\devicecensus.exe" timestamp="1601112394" is_enabled="1" />
     </apps>
 </root>
