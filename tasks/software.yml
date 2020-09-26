@@ -26,3 +26,36 @@
         name: simplewall
         data: "{{ dest_exe }}"
         type: string
+
+- name: Firefox
+  vars:
+    download_url: https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US
+    src_path: "/tmp/windows-vm-ansible-firefox.exe"
+    dest_path: "{{ ansible_env.TEMP }}\\windows-vm-ansible-firefox.exe"
+  block:
+    - name: Download Firefox
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ src_path }}"
+      delegate_to: 127.0.0.1
+
+    - name: Copy Firefox
+      win_copy:
+        src: "{{ src_path }}"
+        dest: "{{ dest_path }}"
+        force: no
+
+    - name: Install Firefox
+      win_shell: |
+        {{ dest_path }} /s
+
+    - name: Cleanup Firefox remote
+      win_file:
+        path: "{{ dest_path }}"
+        state: absent
+
+    - name: Cleanup Firefox local
+      file:
+        path: "{{ src_path }}"
+        state: absent
+      delegate_to: 127.0.0.1
