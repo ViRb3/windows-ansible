@@ -23,6 +23,18 @@
   loop:
     - { name: "DODownloadMode", data: "0", type: "dword" }
 
+# https://pureinfotech.com/disable-timeline-windows-10/
+- name: Disable Activity History
+  win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+  loop:
+    - { name: "EnableActivityFeed", data: "0", type: "dword" }
+    - { name: "PublishUserActivities", data: "0", type: "dword" }
+    - { name: "UploadUserActivities", data: "0", type: "dword" }
+
 - name: Disable animations
   vars:
     script: ../res/DisableAnimations.ps1
