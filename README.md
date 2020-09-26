@@ -24,6 +24,8 @@ While the steps are meant for a VM scenario, they could easily be adjusted to fi
    - Disable WinRM using [DisableWinRM.ps1](DisableWinRM.ps1)
    - Remove the `HTTPS WinRM` user rule in `simplewall`
 
+6. Restart the VM for all changes to take effect
+
 ## Ansible environment variables
 ```json
 {
