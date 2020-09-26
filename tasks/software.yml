@@ -2,13 +2,13 @@
 - name: SimpleWall
   vars:
     src_path: ./res/simplewall
-    dest_path: "{{ ansible_env.ProgramW6432 }}"
-    dest_exe: "{{ dest_path }}\\simplewall\\simplewall.exe"
+    dest_dir: "{{ ansible_env.ProgramW6432 }}"
+    dest_exe: "{{ dest_dir }}\\simplewall\\simplewall.exe"
   block:
     - name: Copy SimpleWall
       win_copy:
         src: "{{ src_path }}"
-        dest: "{{ dest_path }}"
+        dest: "{{ dest_dir }}"
         force: no
 
     - name: Install SimpleWall
