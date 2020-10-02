@@ -5,21 +5,21 @@
   vars:
     # run_script: ScriptFileToRun.ps1
     # run_args: Script args (defaualt: none)
-    run_dest_path: "{{ ansible_env.USERPROFILE }}\\TempScript.ps1"
+    run_dest_file: "{{ ansible_env.USERPROFILE }}\\TempScript.ps1"
   block:
     - name: Copy script
       win_copy:
         src: "../{{ run_script }}"
-        dest: "{{ run_dest_path }}"
+        dest: "{{ run_dest_file }}"
 
     - name: Run script
       vars:
         exec_args: >-
           -ExecutionPolicy Bypass -WindowStyle Hidden
-          -File "{{ run_dest_path }}" {{ run_args | default('') }}
+          -File "{{ run_dest_file }}" {{ run_args | default('') }}
       include_tasks: exec-interactive.yml
 
     - name: Clean up script
       win_file:
-        path: "{{ run_dest_path }}"
+        path: "{{ run_dest_file }}"
         state: absent

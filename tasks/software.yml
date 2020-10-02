@@ -1,13 +1,13 @@
 ---
 - name: SimpleWall
   vars:
-    src_path: ./res/simplewall
+    src_dir: ./res/simplewall
     dest_dir: "{{ ansible_env.ProgramW6432 }}"
     dest_exe: "{{ dest_dir }}\\simplewall\\simplewall.exe"
   block:
     - name: Copy SimpleWall
       win_copy:
-        src: "{{ src_path }}"
+        src: "{{ src_dir }}"
         dest: "{{ dest_dir }}"
         force: no
 
@@ -30,24 +30,24 @@
 - name: Brave Browser
   vars:
     download_url: https://github.com/brave/brave-browser/releases/download/v1.14.84/BraveBrowserStandaloneSilentSetup.exe
-    src_path: "/tmp/windows-vm-ansible-brave.exe"
-    dest_path: "{{ ansible_env.TEMP }}\\windows-vm-ansible-brave.exe"
+    src_file: "/tmp/windows-vm-ansible-brave.exe"
+    dest_file: "{{ ansible_env.TEMP }}\\windows-vm-ansible-brave.exe"
   block:
     - name: Download Brave
       get_url:
         url: "{{ download_url }}"
-        dest: "{{ src_path }}"
+        dest: "{{ src_file }}"
       delegate_to: 127.0.0.1
 
     - name: Copy Brave
       win_copy:
-        src: "{{ src_path }}"
-        dest: "{{ dest_path }}"
+        src: "{{ src_file }}"
+        dest: "{{ dest_file }}"
         force: no
 
     - name: Install Brave
       vars:
-        exec_file: "{{ dest_path }}"
+        exec_file: "{{ dest_file }}"
       include_tasks: util/exec-interactive.yml
 
     - name: Close Brave window
@@ -56,11 +56,11 @@
 
     - name: Cleanup Brave remote
       win_file:
-        path: "{{ dest_path }}"
+        path: "{{ dest_file }}"
         state: absent
 
     - name: Cleanup Brave local
       file:
-        path: "{{ src_path }}"
+        path: "{{ src_file }}"
         state: absent
       delegate_to: 127.0.0.1
