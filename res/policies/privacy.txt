@@ -1,3 +1,6 @@
+; References:
+; https://4sysops.com/wiki/windows-10-privacy-settings
+
 Computer
 Software\Microsoft\Windows\CurrentVersion\Policies\TextInput
 AllowLinguisticDataCollection
