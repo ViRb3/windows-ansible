@@ -19,6 +19,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 Remove-NetFirewallRule -DisplayName "HTTPS WinRM" -ErrorAction SilentlyContinue
 New-NetFirewallRule -DisplayName "HTTPS WinRM" -Group "Remote Management" -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow
 
+# Ensure current user has a password set or WinRM won't work
 $username = $env:UserName
 $password = New-Object System.Security.SecureString
 $psCred = New-Object System.Management.Automation.PSCredential -ArgumentList ($username, $password)
@@ -28,4 +29,21 @@ try {
 catch {
     Write-Host "Found no password for current user '$username', temporarily setting it to '1234' for WinRM to work"
     Set-LocalUser -Name $username -Password (ConvertTo-SecureString -AsPlainText "1234" -Force) -Description "WINRM-REMOVE-ME"
+}
+
+# Ngen Powershell assemblies, greatly improves startup time of future sessions
+$old_path = $env:path
+try {
+    $env:path = [Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()
+    [AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {
+        if (! $_.location) { continue }
+        $Name = Split-Path $_.location -leaf
+        if ($Name.startswith("Microsoft.PowerShell.")) {
+            Write-Progress -Activity "Native Image Installation" -Status "$name"
+            ngen install $_.location | ForEach-Object { "`t$_" }
+        }
+    }
+}
+finally {
+    $env:path = $old_path
 }
