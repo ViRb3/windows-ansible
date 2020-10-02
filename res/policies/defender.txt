@@ -1,0 +1,4 @@
+Computer
+Software\Policies\Microsoft\Windows Defender
+DisableAntiSpyware
+DWORD:1

@@ -1,47 +1,20 @@
 ---
-- name: Disable Windows Defender via MpPreference
+- name: Modify Windows Defender to check if Tamper protection is on
   win_shell: |
-    Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction SilentlyContinue
-    Set-MpPreference -DisableBehaviorMonitoring $true -ErrorAction SilentlyContinue
     Set-MpPreference -SubmitSamplesConsent NeverSend -ErrorAction SilentlyContinue
-    Set-MpPreference -MAPSReporting Disabled -ErrorAction SilentlyContinue
     $true
 
-- name: Disable Windows Defender via Group Policy
-  win_regedit:
-    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\{{ item.key }}"
-    name: "{{ item.name }}"
-    data: "{{ item.data }}"
-    type: "{{ item.type }}"
-  loop:
-    - {
-        key: Real-Time Protection,
-        name: DisableRealtimeMonitoring,
-        data: 1,
-        type: dword,
-      }
-    - {
-        key: Real-Time Protection,
-        name: DisableBehaviorMonitoring,
-        data: 1,
-        type: dword,
-      }
-    - { key: Spynet, name: SubmitSamplesConsent, data: 2, type: dword }
-    - { key: Spynet, name: SpynetReporting, data: 0, type: dword }
-    - { key: "", name: DisableAntiSpyware, data: 1, type: dword }
-
-- name: Check Windows Defender status
+- name: Check if change was applied
   win_shell: >
-    ((Get-MpPreference).DisableRealtimeMonitoring -eq $true)
-    -and
-    ((Get-MpPreference).DisableBehaviorMonitoring -eq $true)
-    -and
     ((Get-MpPreference).SubmitSamplesConsent -eq 2)
-    -and
-    ((Get-MpPreference).MAPSReporting -eq 0)
   register: disable_defender_result
 
-- name: Check if Windows Defender is properly configured
+- name: Throw if change was not applied
   fail:
-    msg: Windows Defender could not be disabled. Is Tamper Protection turned off?
+    msg: Windows Defender could not be modified. Is Tamper Protection turned off?
   when: (disable_defender_result.stdout | trim) != "True"
+
+- name: Apply Defender Group Policies
+  vars:
+    apply_src_policy: ../res/policies/defender.txt
+  include_tasks: util/apply-policies.yml

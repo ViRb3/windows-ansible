@@ -1,0 +1,28 @@
+---
+- name: Apply Group Policies
+  vars:
+    # apply_src_policy: PolicyFile.txt
+    apply_src_lgpo: ../../res/policies/LGPO.exe
+    apply_dest_policy: "{{ ansible_env.TEMP }}\\policy.txt"
+    apply_dest_lgpo: "{{ ansible_env.TEMP }}\\LGPO.exe"
+  block:
+    - name: Copy files
+      win_copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        force: no
+      loop:
+        - { src: "{{ apply_src_lgpo }}", dest: "{{ apply_dest_lgpo }}" }
+        - { src: "../{{ apply_src_policy }}", dest: "{{ apply_dest_policy }}" }
+
+    - name: Import policy
+      win_shell: |
+        & "{{ apply_dest_lgpo }}" /t "{{ apply_dest_policy }}" | Out-Null
+
+    - name: Cleanup
+      win_file:
+        path: "{{ item.dest }}"
+        state: absent
+      loop:
+        - { dest: "{{ apply_dest_policy }}" }
+        - { dest: "{{ apply_dest_lgpo }}" }
