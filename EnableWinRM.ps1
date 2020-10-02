@@ -19,7 +19,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 Remove-NetFirewallRule -DisplayName "HTTPS WinRM" -ErrorAction SilentlyContinue
 New-NetFirewallRule -DisplayName "HTTPS WinRM" -Group "Remote Management" -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow
 
-# Ensure current user has a password set or WinRM won't work
+# Set temporary password if none is present or WinRM won't work
 $username = $env:UserName
 $password = New-Object System.Security.SecureString
 $psCred = New-Object System.Management.Automation.PSCredential -ArgumentList ($username, $password)
