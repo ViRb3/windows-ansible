@@ -14,3 +14,12 @@
     Clear-History
     Remove-Item (Get-PSReadlineOption).HistorySavePath -ErrorAction SilentlyContinue
     $true
+
+- name: Drop WinRM disable script
+  vars:
+    src_file: "../DisableWinRM.ps1"
+    dest_file: "{{ ansible_env.HOMEPATH }}\\Desktop\\DisableWinRM.ps1"
+  win_copy:
+    src: "{{ src_file }}"
+    dest: "{{ dest_file }}"
+    force: no
