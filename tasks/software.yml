@@ -27,34 +27,39 @@
         data: "{{ dest_exe }}"
         type: string
 
-- name: Firefox
+- name: Brave Browser
   vars:
-    download_url: https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US
-    src_path: "/tmp/windows-vm-ansible-firefox.exe"
-    dest_path: "{{ ansible_env.TEMP }}\\windows-vm-ansible-firefox.exe"
+    download_url: https://github.com/brave/brave-browser/releases/download/v1.14.84/BraveBrowserStandaloneSilentSetup.exe
+    src_path: "/tmp/windows-vm-ansible-brave.exe"
+    dest_path: "{{ ansible_env.TEMP }}\\windows-vm-ansible-brave.exe"
   block:
-    - name: Download Firefox
+    - name: Download Brave
       get_url:
         url: "{{ download_url }}"
         dest: "{{ src_path }}"
       delegate_to: 127.0.0.1
 
-    - name: Copy Firefox
+    - name: Copy Brave
       win_copy:
         src: "{{ src_path }}"
         dest: "{{ dest_path }}"
         force: no
 
-    - name: Install Firefox
-      win_shell: |
-        {{ dest_path }} /s
+    - name: Install Brave
+      vars:
+        exec_file: "{{ dest_path }}"
+      include_tasks: util/exec-interactive.yml
 
-    - name: Cleanup Firefox remote
+    - name: Close Brave window
+      win_shell: |
+        Stop-Process -Name "brave"
+
+    - name: Cleanup Brave remote
       win_file:
         path: "{{ dest_path }}"
         state: absent
 
-    - name: Cleanup Firefox local
+    - name: Cleanup Brave local
       file:
         path: "{{ src_path }}"
         state: absent
