@@ -23,7 +23,7 @@
         name: "{{ name }}"
       register: task_stat
       until: (task_stat.state is defined and task_stat.state.status != "TASK_STATE_RUNNING") or (task_stat.task_exists == False)
-      retries: 12
+      retries: 60
       delay: 10
 
     - name: Remove interactive task
