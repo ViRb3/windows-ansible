@@ -7,21 +7,17 @@ While the steps are meant for a VM scenario, they could easily be adjusted to fi
 
 ## Usage
 1. Enable WinRM using the [EnableWinRM.ps1](EnableWinRM.ps1) script. You can also get it by mounting the floppy image [winrm.flp](winrm.flp)
+    > NOTE: The script will temporarily set the current user's password to `1234` if none is present
 
-2. Make sure the user account you will be using with WinRM has a password:
-    ```powershell
-    Set-LocalUser -Name "Admin" -Password (ConvertTo-SecureString -AsPlainText "1234" -Force)
-    ```
-3. Configure [inventory.ini](inventory.ini)
+2. Configure [inventory.ini](inventory.ini)
 
-4. Run this Ansible playbook:
+3. Run this Ansible playbook:
     ```powershell
     bash ./setup-windows.sh
     ```
 
 5. _(optional)_ Revert all WinRM changes:
-   - Remove the user password
-   - Disable WinRM using [DisableWinRM.ps1](DisableWinRM.ps1)
+   - Disable WinRM using [DisableWinRM.ps1](DisableWinRM.ps1). The temporary password (if present) will be removed.
    - Remove the `HTTPS WinRM` user rule in `simplewall`
 
 6. Restart the VM for all changes to take effect

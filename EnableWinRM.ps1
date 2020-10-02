@@ -18,3 +18,14 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 
 Remove-NetFirewallRule -DisplayName "HTTPS WinRM" -ErrorAction SilentlyContinue
 New-NetFirewallRule -DisplayName "HTTPS WinRM" -Group "Remote Management" -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow
+
+$username = $env:UserName
+$password = New-Object System.Security.SecureString
+$psCred = New-Object System.Management.Automation.PSCredential -ArgumentList ($username, $password)
+try {
+    Start-Process -FilePath cmd.exe /c -Credential $psCred
+}
+catch {
+    Write-Host "Found no password for current user '$username', temporarily setting it to '1234' for WinRM to work"
+    Set-LocalUser -Name $username -Password (ConvertTo-SecureString -AsPlainText "1234" -Force) -Description "WINRM-REMOVE-ME"
+}

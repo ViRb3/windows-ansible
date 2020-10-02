@@ -12,3 +12,9 @@ Remove-NetFirewallRule -DisplayName "HTTPS WinRM"
 
 Set-Service -Name "WinRM" -StartupType Manual
 Stop-Service -Name "WinRM"
+
+$username = $env:UserName
+if ((Get-LocalUser -Name $username).Description -eq "WINRM-REMOVE-ME") {
+    Write-Host "Found temporary password for '$username', removing it"
+    Set-LocalUser -name $username -Password ([securestring]::new()) -Description ""
+}
