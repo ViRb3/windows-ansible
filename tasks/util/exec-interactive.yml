@@ -5,11 +5,11 @@
   vars:
     # exec_file: File to execute (default: powershell.exe)
     # exec_args: File args to use (default: none)
-    name: interactive-task
+    exec_task_name: interactive-task
   block:
     - name: Schedule interactive task
       win_scheduled_task:
-        name: "{{ name }}"
+        name: "{{ exec_task_name }}"
         username: "{{ ansible_env.USERNAME }}"
         run_level: highest
         actions:
@@ -20,7 +20,7 @@
 
     - name: Wait for interactive task to finish
       win_scheduled_task_stat:
-        name: "{{ name }}"
+        name: "{{ exec_task_name }}"
       register: task_stat
       until: (task_stat.state is defined and task_stat.state.status != "TASK_STATE_RUNNING") or (task_stat.task_exists == False)
       retries: 60
@@ -28,5 +28,5 @@
 
     - name: Remove interactive task
       win_scheduled_task:
-        name: "{{ name }}"
+        name: "{{ exec_task_name }}"
         state: absent

@@ -3,24 +3,23 @@
 # To work around this, use the task scheduler which will run in the current user's interactive session
 - name: Execute interactive task
   vars:
-    name: interactive-task
-    # script: ScriptFileToRun.ps1
-    # run_args: Script args
-    _dest_path: "{{ ansible_env.USERPROFILE }}\\TempScript.ps1"
+    # run_script: ScriptFileToRun.ps1
+    # run_args: Script args (defaualt: none)
+    run_dest_path: "{{ ansible_env.USERPROFILE }}\\TempScript.ps1"
   block:
     - name: Copy script
       win_copy:
-        src: "../{{ script }}"
-        dest: "{{ _dest_path }}"
+        src: "../{{ run_script }}"
+        dest: "{{ run_dest_path }}"
 
     - name: Run script
       vars:
         exec_args: >-
           -ExecutionPolicy Bypass -WindowStyle Hidden
-          -File "{{ _dest_path }}" {{ run_args | default('') }}
+          -File "{{ run_dest_path }}" {{ run_args | default('') }}
       include_tasks: exec-interactive.yml
 
     - name: Clean up script
       win_file:
-        path: "{{ _dest_path }}"
+        path: "{{ run_dest_path }}"
         state: absent
