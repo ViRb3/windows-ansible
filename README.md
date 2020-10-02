@@ -26,7 +26,7 @@ While the steps are meant for a VM scenario, they could easily be adjusted to fi
    - Disable WinRM using [DisableWinRM.ps1](DisableWinRM.ps1). The temporary password (if present) will be removed.
    - Remove the `HTTPS WinRM` user rule in `simplewall`
 
-5. Restart the VM for all changes to take effect
+5. Restart the system for all changes to take effect
 
 ## Ansible environment variables
 
