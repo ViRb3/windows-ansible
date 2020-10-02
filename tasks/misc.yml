@@ -1,14 +1,4 @@
 ---
-# https://winaero.com/blog/disable-smartscreen-windows-10-creators-update/
-- name: Disable SmartScreen
-  win_regedit:
-    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
-    name: "{{ item.name }}"
-    data: "{{ item.data }}"
-    type: "{{ item.type }}"
-  loop:
-    - { name: "SmartScreenEnabled", data: "Off", type: "string" }
-
 - name: Disable animations
   vars:
     run_script: ../res/DisableAnimations.ps1

@@ -2,3 +2,13 @@ Computer
 Software\Policies\Microsoft\Windows Defender
 DisableAntiSpyware
 DWORD:1
+
+Computer
+Software\Policies\Microsoft\Windows\System
+EnableSmartScreen
+DWORD:0
+
+Computer
+Software\Policies\Microsoft\Windows\System
+ShellSmartScreenLevel
+DELETE
