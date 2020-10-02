@@ -3,7 +3,8 @@
 # To work around this, use the task scheduler which will run in the current user's interactive session
 - name: Execute interactive task
   vars:
-    # exec_args: Powershell args
+    # exec_file: File to execute (default: powershell.exe)
+    # exec_args: File args to use (default: none)
     name: interactive-task
   block:
     - name: Schedule interactive task
@@ -12,8 +13,8 @@
         username: "{{ ansible_env.USERNAME }}"
         run_level: highest
         actions:
-          - path: powershell.exe
-            arguments: "{{ exec_args }}"
+          - path: "{{ exec_file | default('powershell.exe') }}"
+            arguments: "{{ exec_args | default('') }}"
         triggers:
           - type: registration
 
