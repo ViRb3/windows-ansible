@@ -1,12 +1,12 @@
 ---
 - name: Modify Windows Defender to check if Tamper protection is on
   win_shell: |
-    Set-MpPreference -SubmitSamplesConsent NeverSend -ErrorAction SilentlyContinue
+    Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction SilentlyContinue
     $true
 
 - name: Check if change was applied
   win_shell: >
-    ((Get-MpPreference).SubmitSamplesConsent -eq 2)
+    (Get-MpPreference).DisableRealtimeMonitoring -eq $true
   register: disable_defender_result
 
 - name: Throw if change was not applied
