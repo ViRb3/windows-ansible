@@ -1,15 +1,16 @@
-# Windows VM Ansible
+# Windows++ Ansible
 
-> Ansible playbook to configure a Windows VM
+> Ansible playbook to configure a Windows machine
 
 ## Introduction
 
 This Ansible playbook will apply my personal settings to any Windows 10 machine.
-While the steps are meant for a VM scenario, they could easily be adjusted to fit a production deployment.
+The default configuration is intended for a virtual machine, but you can tweak it from [inventory.ini](inventory.ini).
 
 ## Usage
 
-1. Enable WinRM using the [EnableWinRM.ps1](EnableWinRM.ps1) script. You can also get it by mounting the floppy image [winrm.flp](winrm.flp)
+1. Enable WinRM using the [EnableWinRM.ps1](EnableWinRM.ps1) script.
+   You can also get it by mounting the floppy image [winrm.flp](winrm.flp) in VMWare.
 
    > NOTE: The script will temporarily set the current user's password to `1234` if none is present
 
@@ -23,8 +24,8 @@ While the steps are meant for a VM scenario, they could easily be adjusted to fi
 
 4. _(optional)_ Revert all WinRM changes:
 
-   - Disable WinRM using [DisableWinRM.ps1](DisableWinRM.ps1). The temporary password (if present) will be removed.
-   - Remove the `HTTPS WinRM` user rule in `simplewall`
+   - Disable WinRM using [DisableWinRM.ps1](DisableWinRM.ps1) on your desktop. The temporary password (if present) will be removed.
+   - Remove the `HTTPS WinRM` user rule in `simplewall` (if installed)
 
 5. Restart the system for all changes to take effect
 
