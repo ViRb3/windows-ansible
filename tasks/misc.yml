@@ -7,9 +7,11 @@
 - name: Set power plan to High Performance
   win_power_plan:
     name: high performance
+  when: set_powerplan
 
 - name: Disable screen timeout
   win_shell: powercfg -change -monitor-timeout-ac 0
+  when: set_powerplan
 
 - name: Disable telemetry
   win_regedit:
