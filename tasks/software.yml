@@ -1,5 +1,6 @@
 ---
 - name: SimpleWall
+  when: install_simplewall
   vars:
     src_dir: ./res/simplewall
     dest_dir: "{{ ansible_env.ProgramW6432 }}"
@@ -28,6 +29,7 @@
         type: string
 
 - name: Brave Browser
+  when: install_brave
   vars:
     download_url: https://github.com/brave/brave-browser/releases/download/v1.14.84/BraveBrowserStandaloneSilentSetup.exe
     src_file: "/tmp/windows-vm-ansible-brave.exe"
