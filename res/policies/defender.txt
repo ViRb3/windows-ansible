@@ -12,3 +12,33 @@ Computer
 Software\Policies\Microsoft\Windows\System
 ShellSmartScreenLevel
 DELETE
+
+Computer
+Software\Policies\Microsoft\Windows Defender\Real-Time Protection
+DisableOnAccessProtection
+DWORD:1
+
+Computer
+Software\Policies\Microsoft\Windows Defender\Real-Time Protection
+DisableRealtimeMonitoring
+DWORD:1
+
+Computer
+Software\Policies\Microsoft\Windows Defender\Real-Time Protection
+DisableBehaviorMonitoring
+DWORD:1
+
+Computer
+Software\Policies\Microsoft\Windows Defender\Reporting
+DisableGenericRePorts
+DWORD:1
+
+Computer
+Software\Policies\Microsoft\Windows Defender\Spynet
+SubmitSamplesConsent
+DWORD:2
+
+Computer
+Software\Policies\Microsoft\Windows Defender\Spynet
+SpynetReporting
+DWORD:0
