@@ -12,4 +12,3 @@
     - include_tasks: tasks/disable-defender.yml
     - include_tasks: tasks/software.yml
     - include_tasks: tasks/cleanup.yml
-      when: not debug
