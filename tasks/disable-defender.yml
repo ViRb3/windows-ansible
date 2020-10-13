@@ -1,20 +1,42 @@
 ---
-- name: Modify Windows Defender to check if Tamper protection is on
+- name: Temporarily disable Windows Defender
   win_shell: |
     Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction SilentlyContinue
+    Set-MpPreference -DisableBehaviorMonitoring $true -ErrorAction SilentlyContinue
+    Set-MpPreference -SubmitSamplesConsent NeverSend -ErrorAction SilentlyContinue
+    Set-MpPreference -MAPSReporting Disabled -ErrorAction SilentlyContinue
     $true
 
-- name: Check if change was applied
+- name: Check if changes were applied
   win_shell: >
-    (Get-MpPreference).DisableRealtimeMonitoring -eq $true
+    ((Get-MpPreference).DisableRealtimeMonitoring -eq $true)
+    -and
+    ((Get-MpPreference).DisableBehaviorMonitoring -eq $true)
+    -and
+    ((Get-MpPreference).SubmitSamplesConsent -eq 2)
+    -and
+    ((Get-MpPreference).MAPSReporting -eq 0)
   register: disable_defender_result
 
-- name: Throw if change was not applied
+- name: Throw if changes were not applied
   fail:
     msg: Windows Defender could not be modified. Is Tamper Protection turned off?
   when: (disable_defender_result.stdout | trim) != "True"
+
+- name: Disable Windows Defender by adding exclusion for each possible drive
+  win_shell: |
+    (65..(65+25)).ForEach({ Add-MpPreference -ExclusionPath  "$([char]$_):{{ backslash }}" })
 
 - name: Apply Defender Group Policies
   vars:
     apply_src_policy: ../res/policies/defender.txt
   include_tasks: util/apply-policies.yml
+
+- name: Re-apply global disable directly in registry to prevent revert
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\{{ item.key }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+  loop:
+    - { key: "", name: DisableAntiSpyware, data: 1, type: dword }

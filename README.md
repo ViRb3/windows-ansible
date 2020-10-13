@@ -16,6 +16,8 @@ The default configuration is intended for a virtual machine, but you can tweak i
 
 2. Configure [inventory.ini](inventory.ini)
 
+   1. If disabling Defender, make sure `Tamper Protection` is turned `off`.
+
 3. Run this Ansible playbook:
 
    ```powershell
