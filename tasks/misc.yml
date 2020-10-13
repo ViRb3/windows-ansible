@@ -73,6 +73,15 @@
     - { name: DisallowShaking, data: 1 }
     - { name: LaunchTo, data: 1 }
 
+- name: Disable Start Menu app suggestions
+  win_regedit:
+    path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: dword
+  loop:
+    - { name: SubscribedContent-338388Enabled, data: 0 }
+
 - name: Delete live tiles
   vars:
     run_script: ../res/DeleteLiveTiles.ps1
