@@ -72,6 +72,7 @@
     - { name: HideDrivesWithNoMedia, data: 0 }
     - { name: DisallowShaking, data: 1 }
     - { name: LaunchTo, data: 1 }
+    - { name: SeparateProcess, data: 1 }
 
 - name: Disable Start Menu app suggestions
   win_regedit:
