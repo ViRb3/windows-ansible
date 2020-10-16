@@ -5,7 +5,7 @@
 ## Introduction
 
 This Ansible playbook will apply my personal settings to any Windows 10 machine.
-The default configuration is intended for a virtual machine, but you can tweak it from [inventory.ini](inventory.ini).
+The default configuration is intended for a consumer deployment, but you can tweak it from [inventory.ini](inventory.ini).
 
 ## Usage
 
