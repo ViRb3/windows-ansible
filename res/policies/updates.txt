@@ -11,7 +11,7 @@ DWORD:0
 Computer
 Software\Policies\Microsoft\Windows\WindowsUpdate\AU
 AUOptions
-DWORD:2
+DWORD:4
 
 Computer
 Software\Policies\Microsoft\Windows\WindowsUpdate\AU
@@ -26,7 +26,7 @@ DWORD:0
 Computer
 Software\Policies\Microsoft\Windows\WindowsUpdate\AU
 ScheduledInstallTime
-DWORD:3
+DWORD:24
 
 Computer
 Software\Policies\Microsoft\Windows\WindowsUpdate\AU

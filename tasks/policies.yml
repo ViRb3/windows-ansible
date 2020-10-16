@@ -1,16 +1,21 @@
 ---
-- name: Apply Privacy Group Policies
+- name: Apply Privacy Policies
   vars:
     apply_src_policy: ../res/policies/privacy.txt
   include_tasks: util/apply-policies.yml
 
-- name: Apply Security Group Policies
+- name: Apply Security Policies
   vars:
     apply_src_policy: ../res/policies/security.txt
   include_tasks: util/apply-policies.yml
 
-- name: Apply Updates Group Policies
-  when: set_update_policies
+- name: Apply Update Policies
+  vars:
+    apply_src_policy: ../res/policies/updates.txt
+  include_tasks: util/apply-policies.yml
+
+- name: Apply Hardcore Policies
+  when: set_hardcore_policies
   vars:
     apply_src_policy: ../res/policies/updates.txt
   include_tasks: util/apply-policies.yml
