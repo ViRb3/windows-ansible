@@ -46,7 +46,6 @@
     Get-AppxPackage *screensketch* | Remove-AppxPackage
     Get-AppxPackage *getstarted* | Remove-AppxPackage # tips
     Get-AppxPackage *bingweather* | Remove-AppxPackage
-    Get-AppxPackage *xbox* | Remove-AppxPackage
     $true
 
 - name: Disable Sticky Keys
