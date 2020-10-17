@@ -7,9 +7,9 @@
 
   tasks:
     - include_tasks: tasks/prepare.yml
-    - include_tasks: tasks/policies.yml
-    - include_tasks: tasks/misc.yml
     - include_tasks: tasks/disable-defender.yml
       when: disable_defender
+    - include_tasks: tasks/policies.yml
+    - include_tasks: tasks/misc.yml
     - include_tasks: tasks/software.yml
     - include_tasks: tasks/cleanup.yml
