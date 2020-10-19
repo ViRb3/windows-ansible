@@ -1,4 +1,4 @@
-# Windows++ Ansible
+# Windows Ansible
 
 > Ansible playbook to configure a Windows machine
 
