@@ -90,7 +90,7 @@
 - name: Change hostname
   when: change_hostname
   win_shell: |
-    Rename-Computer -NewName "{{ ansible_user }}"
+    Rename-Computer -NewName "DESKTOP-{{ ansible_user }}"
 
 - name: Disable spy domains via hosts file
   when: set_spy_block_hosts
