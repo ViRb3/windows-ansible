@@ -4,6 +4,14 @@
     apply_src_policy: ../res/policies/privacy.txt
   include_tasks: util/apply-policies.yml
 
+- name: Block 'Use this account everywhere on your device'
+  # https://docs.microsoft.com/en-us/azure/active-directory/devices/hybrid-azuread-join-plan#review-things-you-should-know
+  win_regedit:
+    path: HKLM:\Software\Policies\Microsoft\Windows\WorkplaceJoin
+    name: BlockAADWorkplaceJoin
+    data: "1"
+    type: dword
+
 - name: Apply Security Policies
   vars:
     apply_src_policy: ../res/policies/security.txt
