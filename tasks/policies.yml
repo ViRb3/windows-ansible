@@ -27,3 +27,16 @@
   vars:
     apply_src_policy: ../res/policies/updates.txt
   include_tasks: util/apply-policies.yml
+
+- name: Apply Lenovo Policies
+  when: set_lenovo_policies
+  vars:
+    apply_src_policy: ../res/policies/updates.txt
+  include_tasks: util/apply-policies.yml
+
+- name: Remove "Lenovo Fn and function keys" driver to apply blocking policy
+  when: set_lenovo_policies
+  win_shell: |
+    $wmiObject = Get-WmiObject Win32_PnPSignedDriver | Where-Object HardWareID -eq "ACPI\VEN_LHK&DEV_2019"
+    pnputil.exe /remove-device $wmiObject.DeviceID /subtree
+    pnputil.exe /delete-driver $wmiObject.InfName /uninstall
