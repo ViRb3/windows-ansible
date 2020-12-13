@@ -23,7 +23,7 @@
   include_tasks: util/apply-policies.yml
 
 - name: Apply Hardcore Policies
-  when: set_hardcore_policies
+  when: hardcore_mode
   vars:
     apply_src_policy: ../res/policies/updates.txt
   include_tasks: util/apply-policies.yml
