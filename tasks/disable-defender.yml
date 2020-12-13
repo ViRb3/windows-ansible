@@ -27,7 +27,7 @@
   vars:
     command: >
       "SecurityHealthService", "Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend"
-      | %{ Stop-Service $_; Set-Service $_ -StartupType Disabled }
+      | %{ Stop-Service $_; Set-Service $_ -StartupType Manual }
   block:
     - vars:
         exec_args: powershell -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
