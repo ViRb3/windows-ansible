@@ -10,7 +10,6 @@ The default configuration is intended for a consumer deployment, but you can twe
 ## Usage
 
 1. Enable WinRM using the [EnableWinRM.ps1](EnableWinRM.ps1) script.
-   You can also get it by mounting the floppy image [winrm.flp](winrm.flp) in VMWare.
 
    > NOTE: The script will temporarily set the current user's password to `1234` if none is present
 
