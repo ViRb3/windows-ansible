@@ -19,7 +19,7 @@ The default configuration is intended for a consumer deployment, but you can twe
 
 3. Run this Ansible playbook:
 
-   ```powershell
+   ```bash
    bash ./setup-windows.sh
    ```
 
