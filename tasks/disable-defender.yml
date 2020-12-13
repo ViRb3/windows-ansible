@@ -23,20 +23,17 @@
     msg: Windows Defender could not be modified. Is Tamper Protection turned off?
   when: (disable_defender_result.stdout | trim) != "True"
 
-- name: Disable Windows Defender by adding exclusion for each possible drive
-  win_shell: |
-    (65..(65+25)).ForEach({ Add-MpPreference -ExclusionPath  "$([char]$_):{{ backslash }}" })
+- name: Disable Windows Defender services
+  vars:
+    command: >
+      "wscsvc", "SecurityHealthService", "Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend"
+      | %{ Stop-Service $_; Set-Service $_ -StartupType Disabled }
+  block:
+    - vars:
+        exec_args: powershell -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
+      include_tasks: util/sudo.yml
 
 - name: Apply Defender Group Policies
   vars:
     apply_src_policy: ../res/policies/defender.txt
   include_tasks: util/apply-policies.yml
-
-- name: Re-apply global disable directly in registry to prevent revert
-  win_regedit:
-    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\{{ item.key }}"
-    name: "{{ item.name }}"
-    data: "{{ item.data }}"
-    type: "{{ item.type }}"
-  loop:
-    - { key: "", name: DisableAntiSpyware, data: 1, type: dword }

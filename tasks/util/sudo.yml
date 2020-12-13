@@ -1,0 +1,22 @@
+---
+- name: Run as TrustedInstaller
+  vars:
+    sudo_src_bin: ../../res/NSudoLC.exe
+    sudo_dest_bin: "{{ ansible_env.TEMP }}\\NSudoLC.exe"
+    # exec_args: File args to use (default: none)
+  block:
+    - name: Copy NSudoLC
+      win_copy:
+        src: "{{ sudo_src_bin }}"
+        dest: "{{ sudo_dest_bin }}"
+        force: no
+
+    - name: Execute command
+      win_shell: |
+        & "{{ sudo_dest_bin }}" -U:T -P:E -Wait -UseCurrentConsole {{ exec_args }}
+      register: output
+
+    - name: Cleanup
+      win_file:
+        path: "{{ sudo_dest_bin }}"
+        state: absent
