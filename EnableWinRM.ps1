@@ -27,8 +27,10 @@ try {
     Start-Process -FilePath cmd.exe /c -Credential $psCred
 }
 catch {
-    Write-Host "Found no password for current user '$username', temporarily setting it to '1234' for WinRM to work"
-    Set-LocalUser -Name $username -Password (ConvertTo-SecureString -AsPlainText "1234" -Force) -Description "WINRM-REMOVE-ME"
+    if ($_.Exception.Message -like "*blank passwords aren't allowed*") {
+        Write-Host "Found no password for current user '$username', temporarily setting it to '1234' for WinRM to work"
+        Set-LocalUser -Name $username -Password (ConvertTo-SecureString -AsPlainText "1234" -Force) -Description "WINRM-REMOVE-ME"
+    }   
 }
 
 # Ngen Powershell assemblies, greatly improves startup time of future sessions
