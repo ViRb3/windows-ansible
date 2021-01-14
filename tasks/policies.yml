@@ -25,5 +25,5 @@
 - name: Apply Hardcore Policies
   when: hardcore_mode
   vars:
-    apply_src_policy: ../res/policies/updates.txt
+    apply_src_policy: ../res/policies/hardcore.txt
   include_tasks: util/apply-policies.yml
