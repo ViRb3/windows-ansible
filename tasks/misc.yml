@@ -8,6 +8,7 @@
   win_power_plan:
     name: high performance
   when: set_powerplan
+  ignore_errors: yes
 
 - name: Disable screen timeout
   win_shell: powercfg -change -monitor-timeout-ac 0
