@@ -1,3 +1,5 @@
 #!/bin/bash
 set -e
-ansible-playbook -i inventory.ini setup.yml $1
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
+ansible-playbook -i inventory.ini setup.yml "$@"
