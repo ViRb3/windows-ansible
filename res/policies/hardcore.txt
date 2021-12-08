@@ -62,3 +62,8 @@ User
 Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
 SaveZoneInformation
 DWORD:1
+
+Computer
+Software\Policies\Microsoft\Windows\WindowsUpdate
+ExcludeWUDriversInQualityUpdate
+DWORD:1
