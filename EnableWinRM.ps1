@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 # Set-Service always makes it "Automatic (Delayed start)"
 cmd /c "sc config winrm start=auto"
 Start-Service -Name "WinRM"

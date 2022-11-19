@@ -27,3 +27,6 @@
   vars:
     apply_src_policy: ../res/policies/hardcore.txt
   include_tasks: util/apply-policies.yml
+
+- name: Refresh policies
+  win_shell: gpupdate /force

@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 # Remove all listeners
 Remove-Item -Path WSMan:\localhost\Listener\* -Recurse -Force
 
@@ -17,5 +19,5 @@ Stop-Service -Name "WinRM"
 $username = $env:UserName
 if ((Get-LocalUser -Name $username).Description -eq "WINRM-REMOVE-ME") {
     Write-Host "Found temporary password for '$username', removing it"
-    Set-LocalUser -name $username -Password ([securestring]::new()) -Description ""
+    Set-LocalUser -name $username -Password ([securestring]::new()) -PasswordNeverExpires $true -Description ""
 }

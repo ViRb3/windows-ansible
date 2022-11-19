@@ -110,3 +110,71 @@ Computer
 Software\Policies\Microsoft\Windows\Windows Search
 ConnectedSearchPrivacy
 DWORD:3
+
+; https://gpsearch.azurewebsites.net/#15930
+Computer
+Software\Policies\Microsoft\Dsh
+AllowNewsAndInterests
+DWORD:0
+
+; https://gpsearch.azurewebsites.net/#15942
+Computer
+Software\Policies\Microsoft\Windows\Windows Chat
+ChatIcon
+DWORD:3
+
+; https://gpsearch.azurewebsites.net/#16265
+Computer
+Software\Policies\Microsoft\Windows\Explorer
+HidetaskviewButton
+DWORD:1
+
+; References:
+; https://github.com/troennes/private-secure-windows
+
+User
+Software\Policies\Microsoft\Windows\CloudContent
+DisableThirdPartySuggestions
+DWORD:1
+
+Computer
+Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+AllowOnlineTips
+DWORD:0
+
+Computer
+SOFTWARE\Policies\Microsoft\Windows\CloudContent
+DisableSoftLanding
+DWORD:1
+
+Computer
+SOFTWARE\Policies\Microsoft\Windows\Windows Feeds
+EnableFeeds
+DWORD:0
+
+Computer
+Software\Policies\Microsoft\Windows\DataCollection
+DisableOneSettingsDownloads
+DWORD:1
+
+Computer
+SOFTWARE\Policies\Microsoft\Windows\CloudContent
+DisableWindowsConsumerFeatures
+DWORD:1
+
+Computer
+Software\Microsoft\OneDrive
+PreventNetworkTrafficPreUserSignIn
+DWORD:1
+
+; https://community.spiceworks.com/topic/2339916-windows-11-deployment-without-bloatware
+Computer
+Software\Policies\Microsoft\Windows\CloudContent
+DisableCloudOptimizedContent
+DWORD:1
+
+; https://community.spiceworks.com/topic/2339916-windows-11-deployment-without-bloatware
+Computer
+Software\Policies\Microsoft\Windows\CloudContent
+DisableConsumerAccountStateContent
+DWORD:1

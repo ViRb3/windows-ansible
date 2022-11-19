@@ -67,3 +67,36 @@ Computer
 Software\Policies\Microsoft\Windows\WindowsUpdate
 ExcludeWUDriversInQualityUpdate
 DWORD:1
+
+; References:
+; https://github.com/troennes/private-secure-windows
+
+Computer
+Software\Policies\Microsoft\Windows\AppPrivacy
+LetAppsActivateWithVoice
+DWORD:2
+
+Computer
+Software\Policies\Microsoft\Windows\AppPrivacy
+LetAppsActivateWithVoiceAboveLock
+DWORD:2
+
+User
+SOFTWARE\Policies\Microsoft\Windows\CloudContent
+DisableWindowsSpotlightFeatures
+DWORD:1
+
+User
+SOFTWARE\Microsoft\InputPersonalization
+RestrictImplicitInkCollection
+DWORD:1
+
+User
+SOFTWARE\Microsoft\InputPersonalization
+RestrictImplicitTextCollection
+DWORD:1
+
+User
+Software\Policies\Microsoft\Windows\CloudContent
+DisableTailoredExperiencesWithDiagnosticData
+DWORD:1

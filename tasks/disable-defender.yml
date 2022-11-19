@@ -26,11 +26,13 @@
 - name: Disable Windows Defender services
   vars:
     command: >
-      "SecurityHealthService", "Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend"
-      | %{ Stop-Service $_; Set-Service $_ -StartupType Manual }
+      $services = @("SecurityHealthService", "Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend");
+      foreach ($service in $services) {
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\$service" -Name Start -Value 3;
+      }
   block:
     - vars:
-        exec_args: powershell -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
+        exec_args: powershell.exe -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
       include_tasks: util/sudo.yml
 
 - name: Apply Defender Group Policies

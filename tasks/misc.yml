@@ -5,10 +5,8 @@
   include_tasks: util/run-interactive.yml
 
 - name: Set power plan to High Performance
-  win_power_plan:
-    name: high performance
+  win_shell: powercfg.exe -SETACTIVE 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c 
   when: set_powerplan
-  ignore_errors: yes
 
 - name: Disable screen timeout
   win_shell: powercfg -change -monitor-timeout-ac 0
@@ -30,23 +28,36 @@
     if ($null -ne $process) {
       $process | Stop-Process -Force
       Start-Process "$env:SystemRoot\SysWOW64\OneDriveSetup.exe" "/uninstall" -Wait
+      Start-Process "$env:SystemRoot\System32\OneDriveSetup.exe" "/uninstall" -Wait
     }
     $true
 
 - name: Uninstall built-in apps
   win_shell: |
     Get-AppxPackage *3dviewer* | Remove-AppxPackage
-    Get-AppxPackage *feedback* | Remove-AppxPackage
-    Get-AppxPackage *windowsmaps* | Remove-AppxPackage
-    Get-AppxPackage *solitairecollection* | Remove-AppxPackage
-    Get-AppxPackage *mixedreality* | Remove-AppxPackage
-    Get-AppxPackage *officehub* | Remove-AppxPackage
-    Get-AppxPackage *onenote* | Remove-AppxPackage
-    Get-AppxPackage *mspaint* | Remove-AppxPackage # Paint 3D
-    Get-AppxPackage *skypeapp* | Remove-AppxPackage
-    Get-AppxPackage *screensketch* | Remove-AppxPackage
-    Get-AppxPackage *getstarted* | Remove-AppxPackage # tips
+    Get-AppxPackage *amazon* | Remove-AppxPackage
+    Get-AppxPackage *bingnews* | Remove-AppxPackage
     Get-AppxPackage *bingweather* | Remove-AppxPackage
+    Get-AppxPackage *clipchamp* | Remove-AppxPackage
+    Get-AppxPackage *disney* | Remove-AppxPackage
+    Get-AppxPackage *facebook* | Remove-AppxPackage
+    Get-AppxPackage *family* | Remove-AppxPackage
+    Get-AppxPackage *feedback* | Remove-AppxPackage
+    Get-AppxPackage *getstarted* | Remove-AppxPackage # Tips
+    Get-AppxPackage *mixedreality* | Remove-AppxPackage
+    Get-AppxPackage *mspaint* | Remove-AppxPackage # Paint 3D
+    Get-AppxPackage *office* | Remove-AppxPackage
+    Get-AppxPackage *onenote* | Remove-AppxPackage
+    Get-AppxPackage *quickassist* | Remove-AppxPackage
+    Get-AppxPackage *skype* | Remove-AppxPackage
+    Get-AppxPackage *solitaire* | Remove-AppxPackage
+    Get-AppxPackage *spotify* | Remove-AppxPackage
+    Get-AppxPackage *teams* | Remove-AppxPackage
+    Get-AppxPackage *tiktok* | Remove-AppxPackage
+    Get-AppxPackage *todos* | Remove-AppxPackage # requires account
+    Get-AppxPackage *whatsapp* | Remove-AppxPackage
+    Get-AppxPackage *windowsmaps* | Remove-AppxPackage
+    Get-AppxPackage *zunevideo* | Remove-AppxPackage # Movies & TV
     $true
 
 - name: Disable Sticky Keys
@@ -89,6 +100,13 @@
     type: dword
   loop:
     - { name: SubscribedContent-338388Enabled, data: 0 }
+
+- name: Reset pinned apps
+  win_shell: |
+    # https://www.reddit.com/r/sysadmin/comments/yrxd93/remove_irrelevant_win11_pinned_apps_win11_pro/
+    $Layout = 'AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState'
+    Get-ChildItem 'C:\Users' | ForEach-Object { Remove-Item "C:\Users\$($_.Name)\$Layout" -Recurse -Force -ErrorAction Ignore }
+    Stop-Process -ProcessName explorer
 
 - name: Change hostname
   when: change_hostname
