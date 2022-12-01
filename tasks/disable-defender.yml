@@ -1,39 +1,17 @@
 ---
-- name: Temporarily disable Windows Defender
-  win_shell: |
-    Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction SilentlyContinue
-    Set-MpPreference -DisableBehaviorMonitoring $true -ErrorAction SilentlyContinue
-    Set-MpPreference -SubmitSamplesConsent NeverSend -ErrorAction SilentlyContinue
-    Set-MpPreference -MAPSReporting Disabled -ErrorAction SilentlyContinue
-    $true
-
-- name: Check if changes were applied
-  win_shell: >
-    ((Get-MpPreference).DisableRealtimeMonitoring -eq $true)
-    -and
-    ((Get-MpPreference).DisableBehaviorMonitoring -eq $true)
-    -and
-    ((Get-MpPreference).SubmitSamplesConsent -eq 2)
-    -and
-    ((Get-MpPreference).MAPSReporting -eq 0)
-  register: disable_defender_result
-
-- name: Throw if changes were not applied
-  fail:
-    msg: Windows Defender could not be modified. Is Tamper Protection turned off?
-  when: (disable_defender_result.stdout | trim) != "True"
-
-- name: Disable Windows Defender services
+- name: Disable Windows Defender
   vars:
-    command: >
-      $services = @("SecurityHealthService", "Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend");
+    command: |
+      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name MpPlatformKillbitsFromEngine -Value ([byte[]](00,00,00,00,00,00,00,00))
+      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name TamperProtectionSource -Value 0
+      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name MpCapability -Value ([byte[]](00,00,00,00,00,00,00,00))
+      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name TamperProtection -Value 0
+      $services = @("Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend", "MsSecCore", "SgrmAgent", "SgrmBroker", "webthreatdefsvc", "webthreatdefusersvc")
       foreach ($service in $services) {
-        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\$service" -Name Start -Value 3;
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\$service" -Name Start -Value 4
       }
-  block:
-    - vars:
-        exec_args: powershell.exe -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
-      include_tasks: util/sudo.yml
+    exec_args: powershell.exe -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
+  include_tasks: util/sudo.yml
 
 - name: Apply Defender Group Policies
   vars:

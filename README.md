@@ -15,8 +15,6 @@ The default configuration is intended for a consumer deployment, but you can twe
 
 2. Configure [inventory.ini](inventory.ini)
 
-   1. If disabling Defender, make sure `Tamper Protection` is turned `off`.
-
 3. Run this Ansible playbook:
 
    ```bash
