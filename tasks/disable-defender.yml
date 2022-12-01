@@ -1,17 +1,27 @@
 ---
 - name: Disable Windows Defender
   vars:
-    command: |
-      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name MpPlatformKillbitsFromEngine -Value ([byte[]](00,00,00,00,00,00,00,00))
-      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name TamperProtectionSource -Value 0
-      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name MpCapability -Value ([byte[]](00,00,00,00,00,00,00,00))
-      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features" -Name TamperProtection -Value 0
-      $services = @("Sense", "WdBoot", "WdFilter", "WdNisDrv", "WdNisSvc", "WinDefend", "MsSecCore", "SgrmAgent", "SgrmBroker", "webthreatdefsvc", "webthreatdefusersvc")
-      foreach ($service in $services) {
-        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\$service" -Name Start -Value 4
-      }
-    exec_args: powershell.exe -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
-  include_tasks: util/sudo.yml
+    # https://github.com/jbara2002/windows-defender-remover
+    defender_src: ../res/defender/
+    defender_dest: "{{ ansible_env.TEMP }}\\defender"
+  block:
+    - name: Copy files
+      win_copy:
+        src: "{{ defender_src }}"
+        dest: "{{ defender_dest }}"
+        force: no
+    - vars:
+        command: |
+          $regFiles = Get-ChildItem "{{ ansible_env.TEMP }}\\defender\\*.reg"
+          foreach ($file in $regFiles) {
+            reg import "$file"
+          }
+        exec_args: powershell.exe -EncodedCommand {{ command | b64encode(encoding='utf-16-le') }}
+      include_tasks: util/sudo.yml
+    - name: Cleanup
+      win_file:
+        path: "{{ defender_dest }}"
+        state: absent
 
 - name: Apply Defender Group Policies
   vars:
